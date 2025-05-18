@@ -166,12 +166,12 @@ func findAllBooks(coll *mongo.Collection) []map[string]interface{} {
 	var ret []map[string]interface{}
 	for _, res := range results {
 		ret = append(ret, map[string]interface{}{
-			"ID":          res.ID,
-			"BookName":    res.BookName,
-			"BookAuthor":  res.BookAuthor,
-			"BookEdition": res.BookEdition,
-			"BookPages":   res.BookPages,
-			"BookYear":    res.BookYear,
+			"id":      res.ID,
+			"title":   res.BookName,
+			"author":  res.BookAuthor,
+			"edition": res.BookEdition,
+			"pages":   res.BookPages,
+			"year":    res.BookYear,
 		})
 	}
 
@@ -329,11 +329,11 @@ func main() {
 
 		// Check for duplicates
 		cursor, err := coll.Find(context.TODO(), bson.M{
-			"id":          newBook.ID,
-			"bookname":    newBook.BookName,
-			"bookauthor":  newBook.BookAuthor,
-			"bookyear":    newBook.BookYear,
-			"bookpages":   newBook.BookPages,
+			"id":      newBook.ID,
+			"title":   newBook.BookName,
+			"author":  newBook.BookAuthor,
+			"year":    newBook.BookYear,
+			"pages":   newBook.BookPages,
 		})
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
@@ -369,11 +369,11 @@ func main() {
 		// Update book
 		filter := bson.M{"id": id}
 		update := bson.M{"$set": bson.M{
-			"bookname":    updatedBook.BookName,
-			"bookauthor":  updatedBook.BookAuthor,
-			"bookedition": updatedBook.BookEdition,
-			"bookpages":   updatedBook.BookPages,
-			"bookyear":    updatedBook.BookYear,
+			"title":    updatedBook.BookName,
+			"author":  updatedBook.BookAuthor,
+			"edition": updatedBook.BookEdition,
+			"pages":   updatedBook.BookPages,
+			"year":    updatedBook.BookYear,
 		}}
 
 		result, err := coll.UpdateOne(context.TODO(), filter, update)
