@@ -356,7 +356,7 @@ func main() {
 		}
 
 		return c.JSON(http.StatusCreated, newBook)
-
+	})
  
 		/*
 		var book BookStore
