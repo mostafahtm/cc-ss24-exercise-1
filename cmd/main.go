@@ -166,13 +166,12 @@ func findAllBooks(coll *mongo.Collection) []map[string]interface{} {
 	var ret []map[string]interface{}
 	for _, res := range results {
 		ret = append(ret, map[string]interface{}{
-			"id":      res.ID,
-			"title":   res.BookName,
-			"author":  res.BookAuthor,
-			"edition": res.BookEdition,
-			"pages":   res.BookPages,
-			"year":    res.BookYear,
-
+			"ID":          res.ID,
+			"BookName":    res.BookName,
+			"BookAuthor":  res.BookAuthor,
+			"BookEdition": res.BookEdition,
+			"BookPages":   res.BookPages,
+			"BookYear":    res.BookYear,
 		})
 	}
 
@@ -358,47 +357,6 @@ func main() {
 		return c.JSON(http.StatusCreated, newBook)
 	})
  
-		/*
-		var book BookStore
-	
-		// Bind incoming JSON or form data to the book struct
-		if err := c.Bind(&book); err != nil {
-			return c.String(http.StatusBadRequest, "Invalid input")
-		}
-	
-		
-		// Validate that required fields are present
-		if book.ID == "" || book.BookName == "" || book.BookAuthor == "" {
-			return c.NoContent(http.StatusNoContent)
-		}
-			
-	
-		// Check for full duplicate (excluding MongoID)
-		filter := bson.M{
-			"ID":         book.ID,
-			"BookName":   book.BookName,
-			"BookAuthor": book.BookAuthor,
-			"BookYear":   book.BookYear,
-			"BookPages":  book.BookPages,
-		}
-	
-		count, err := coll.CountDocuments(context.TODO(), filter)
-		if err != nil {
-			return c.String(http.StatusInternalServerError, "Error checking for duplicates")
-		}
-		if count > 0 {
-			return c.NoContent(http.StatusNoContent)
-		}
-	
-		// Insert the new book
-		_, err = coll.InsertOne(context.TODO(), book)
-		if err != nil {
-			return c.String(http.StatusInternalServerError, "Failed to insert book")
-		}
-	
-		return c.String(http.StatusCreated, "Book added successfully")
-	})
-	*/
 
 	// UPDATE book
 	e.PUT("/api/books/:id", func(c echo.Context) error {
