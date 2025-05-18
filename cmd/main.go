@@ -331,7 +331,7 @@ func main() {
 	
 		// Validate that required fields are present
 		if book.ID == "" || book.BookName == "" || book.BookAuthor == "" {
-			return c.String(http.StatusBadRequest, "Missing required fields")
+			return c.NoContent(http.StatusNoContent)
 		}
 	
 		// Check for full duplicate (excluding MongoID)
@@ -348,7 +348,7 @@ func main() {
 			return c.String(http.StatusInternalServerError, "Error checking for duplicates")
 		}
 		if count > 0 {
-			return c.String(http.StatusConflict, "Duplicate book entry")
+			return return c.NoContent(http.StatusNoContent)
 		}
 	
 		// Insert the new book
@@ -385,7 +385,7 @@ func main() {
 		}
 
 		if result.MatchedCount == 0 {
-			return c.JSON(http.StatusNotFound, map[string]string{"error": "Book not found"})
+			return c.NoContent(http.StatusNoContent)
 		}
 
 		return c.JSON(http.StatusOK, map[string]string{"message": "Book updated successfully"})
@@ -401,7 +401,7 @@ func main() {
 		}
 
 		if result.DeletedCount == 0 {
-			return c.JSON(http.StatusNotFound, map[string]string{"error": "Book not found"})
+			return c.NoContent(http.StatusNoContent)
 		}
 
 		return c.JSON(http.StatusOK, map[string]string{"message": "Book deleted successfully"})
