@@ -323,6 +323,42 @@ func main() {
 
 	// POST new book
 	e.POST("/api/books", func(c echo.Context) error {
+		var newBook BookStore
+		if err := c.Bind(&newBook); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
+		}
+
+		// Check for duplicates
+		cursor, err := coll.Find(context.TODO(), bson.M{
+			"id":          newBook.ID,
+			"bookname":    newBook.BookName,
+			"bookauthor":  newBook.BookAuthor,
+			"bookyear":    newBook.BookYear,
+			"bookpages":   newBook.BookPages,
+		})
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+		}
+
+		var existingBooks []BookStore
+		if err = cursor.All(context.TODO(), &existingBooks); err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+		}
+
+		if len(existingBooks) > 0 {
+			return c.JSON(http.StatusConflict, map[string]string{"error": "Book already exists"})
+		}
+
+		// Insert new book
+		_, err = coll.InsertOne(context.TODO(), newBook)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert book"})
+		}
+
+		return c.JSON(http.StatusCreated, newBook)
+
+ 
+		/*
 		var book BookStore
 	
 		// Bind incoming JSON or form data to the book struct
@@ -362,7 +398,7 @@ func main() {
 	
 		return c.String(http.StatusCreated, "Book added successfully")
 	})
-	
+	*/
 
 	// UPDATE book
 	e.PUT("/api/books/:id", func(c echo.Context) error {
