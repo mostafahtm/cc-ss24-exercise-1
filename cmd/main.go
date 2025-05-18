@@ -348,7 +348,7 @@ func main() {
 			return c.String(http.StatusInternalServerError, "Error checking for duplicates")
 		}
 		if count > 0 {
-			return return c.NoContent(http.StatusNoContent)
+			return c.NoContent(http.StatusNoContent)
 		}
 	
 		// Insert the new book
