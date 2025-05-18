@@ -166,7 +166,8 @@ func findAllBooks(coll *mongo.Collection) []map[string]interface{} {
 	var ret []map[string]interface{}
 	for _, res := range results {
 		ret = append(ret, map[string]interface{}{
-			"ID":          res.MongoID.Hex(),
+			"MongoID":     res.MongoID.Hex(),
+			"ID":          res.ID,
 			"BookName":    res.BookName,
 			"BookAuthor":  res.BookAuthor,
 			"BookEdition": res.BookEdition,
@@ -329,10 +330,12 @@ func main() {
 			return c.String(http.StatusBadRequest, "Invalid input")
 		}
 	
+		
 		// Validate that required fields are present
 		if book.ID == "" || book.BookName == "" || book.BookAuthor == "" {
 			return c.NoContent(http.StatusNoContent)
 		}
+			
 	
 		// Check for full duplicate (excluding MongoID)
 		filter := bson.M{
