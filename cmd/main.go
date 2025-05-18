@@ -322,40 +322,44 @@ func main() {
 
 	// POST new book
 	e.POST("/api/books", func(c echo.Context) error {
-		var newBook BookStore
-		if err := c.Bind(&newBook); err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
+		var book BookStore
+	
+		// Bind incoming JSON or form data to the book struct
+		if err := c.Bind(&book); err != nil {
+			return c.String(http.StatusBadRequest, "Invalid input")
 		}
-
-		// Check for duplicates
-		cursor, err := coll.Find(context.TODO(), bson.M{
-			"id":          newBook.ID,
-			"bookname":    newBook.BookName,
-			"bookauthor":  newBook.BookAuthor,
-			"bookyear":    newBook.BookYear,
-			"bookpages":   newBook.BookPages,
-		})
+	
+		// Validate that required fields are present
+		if book.ID == "" || book.BookName == "" || book.BookAuthor == "" {
+			return c.String(http.StatusBadRequest, "Missing required fields")
+		}
+	
+		// Check for full duplicate (excluding MongoID)
+		filter := bson.M{
+			"ID":         book.ID,
+			"BookName":   book.BookName,
+			"BookAuthor": book.BookAuthor,
+			"BookYear":   book.BookYear,
+			"BookPages":  book.BookPages,
+		}
+	
+		count, err := coll.CountDocuments(context.TODO(), filter)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+			return c.String(http.StatusInternalServerError, "Error checking for duplicates")
 		}
-
-		var existingBooks []BookStore
-		if err = cursor.All(context.TODO(), &existingBooks); err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
+		if count > 0 {
+			return c.String(http.StatusConflict, "Duplicate book entry")
 		}
-
-		if len(existingBooks) > 0 {
-			return c.JSON(http.StatusConflict, map[string]string{"error": "Book already exists"})
-		}
-
-		// Insert new book
-		_, err = coll.InsertOne(context.TODO(), newBook)
+	
+		// Insert the new book
+		_, err = coll.InsertOne(context.TODO(), book)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert book"})
+			return c.String(http.StatusInternalServerError, "Failed to insert book")
 		}
-
-		return c.JSON(http.StatusCreated, newBook)
+	
+		return c.String(http.StatusCreated, "Book added successfully")
 	})
+	
 
 	// UPDATE book
 	e.PUT("/api/books/:id", func(c echo.Context) error {
