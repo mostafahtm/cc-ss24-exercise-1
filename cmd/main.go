@@ -22,14 +22,15 @@ import (
 // frontend or the database
 // More on these "tags" like `bson:"_id,omitempty"`: https://go.dev/wiki/Well-known-struct-tags
 type BookStore struct {
-	MongoID     primitive.ObjectID `bson:"_id,omitempty"`
-	ID          string
-	BookName    string
-	BookAuthor  string
-	BookEdition string
-	BookPages   string
-	BookYear    string
+	MongoID     primitive.ObjectID `bson:"_id,omitempty" json:"-"`
+	ID          string             `bson:"ID" json:"id"`
+	BookName    string             `bson:"BookName" json:"title"`
+	BookAuthor  string             `bson:"BookAuthor" json:"author"`
+	BookEdition string             `bson:"BookEdition,omitempty" json:"edition,omitempty"`
+	BookPages   string             `bson:"BookPages,omitempty" json:"pages,omitempty"`
+	BookYear    string             `bson:"BookYear,omitempty" json:"year,omitempty"`
 }
+
 
 // Wraps the "Template" struct to associate a necessary method
 // to determine the rendering procedure
@@ -328,8 +329,8 @@ func main() {
 
 		// Check for duplicates
 		cursor, err := coll.Find(context.TODO(), bson.M{
-			"ID":      newBook.ID,
-			"BookName":   newBook.BookName,
+			"ID":      	   newBook.ID,
+			"BookName":    newBook.BookName,
 			"BookAuthor":  newBook.BookAuthor,
 			"BookEdition": newBook.BookEdition,
 			"BookPages":   newBook.BookPages,
