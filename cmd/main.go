@@ -330,11 +330,6 @@ func main() {
 		// Check for duplicates
 		cursor, err := coll.Find(context.TODO(), bson.M{
 			"ID":      	   newBook.ID,
-			"BookName":    newBook.BookName,
-			"BookAuthor":  newBook.BookAuthor,
-			"BookEdition": newBook.BookEdition,
-			"BookPages":   newBook.BookPages,
-			"BookYear":    newBook.BookYear,
 		})
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
@@ -346,8 +341,8 @@ func main() {
 		}
 
 		if len(existingBooks) > 0 {
-			return c.JSON(http.StatusConflict, map[string]string{"error": "Book already exists"})
-		}
+			return c.JSON(http.StatusOK, map[string]string{"message": "Duplicate book entry, not inserted"})
+		}		
 
 		// Insert new book
 		_, err = coll.InsertOne(context.TODO(), newBook)
