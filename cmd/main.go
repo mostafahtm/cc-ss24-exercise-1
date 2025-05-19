@@ -328,11 +328,12 @@ func main() {
 
 		// Check for duplicates
 		cursor, err := coll.Find(context.TODO(), bson.M{
-			"id":      newBook.ID,
-			"title":   newBook.BookName,
-			"author":  newBook.BookAuthor,
-			"year":    newBook.BookYear,
-			"pages":   newBook.BookPages,
+			"ID":      newBook.ID,
+			"BookName":   newBook.BookName,
+			"BookAuthor":  newBook.BookAuthor,
+			"BookEdition": newBook.BookEdition,
+			"BookPages":   newBook.BookPages,
+			"BookYear":    newBook.BookYear,
 		})
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Database error"})
