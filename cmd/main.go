@@ -170,7 +170,7 @@ func findAllBooks(coll *mongo.Collection) []map[string]interface{} {
 			"BookName":    res.BookName,
 			"BookAuthor":  res.BookAuthor,
 			"BookEdition": res.BookEdition,
-			"BookPages":   res.BookPage
+			"BookPages":   res.BookPage,
 		})
 	}
 
