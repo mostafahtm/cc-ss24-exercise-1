@@ -364,7 +364,7 @@ func main() {
 		}
 
 		// Update book
-		filter := bson.M{"id": id}
+		filter := bson.M{"ID": id}
 		update := bson.M{"$set": bson.M{
 			"title":    updatedBook.BookName,
 			"author":  updatedBook.BookAuthor,
@@ -389,7 +389,7 @@ func main() {
 	e.DELETE("/api/books/:id", func(c echo.Context) error {
 		id := c.Param("id")
 		
-		result, err := coll.DeleteOne(context.TODO(), bson.M{"id": id})
+		result, err := coll.DeleteOne(context.TODO(), bson.M{"ID": id})
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to delete book"})
 		}
