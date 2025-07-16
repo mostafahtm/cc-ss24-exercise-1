@@ -1,8 +1,19 @@
 ## Exercise 1 for Cloud Computing ## Webapp Deployment on Cloud
 
-### Summer Semester 2025 ###
+### Summary of Project ###
+This project is part of the Cloud Computing course (Summer Semester 2025) and demonstrates the deployment of a dynamic web application using Golang, HTMX, and MongoDB. The app provides a front end for managing a simple BookStore, along with a RESTful API for CRUD operations. Key aspects include:
 
-#### More enquiries, please contact me ####
+Dynamic rendering using HTMX and Go templates
+
+REST API endpoints (GET, POST, PUT, DELETE)
+
+MongoDB integration (NoSQL) for storing book data
+
+Server setup and dependency management with Go modules
+
+The exercise focuses on building cloud-ready applications and understanding core concepts like templating, frontend-backend interaction, and data persistence.
+
+#### Task Description ####
 
 Dear students, 
 
